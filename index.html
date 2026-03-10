@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Vistoria Ambiental – Afaplan</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- ═══════════════════════════════════════════ PWA META ═══ -->
+<meta name="application-name" content="Vistoria Ambiental">
+<meta name="description" content="Formulário de vistoria ambiental de campo – Afaplan / Equatorial Energia">
+<meta name="theme-color" content="#1a3a5c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vistoria Amb.">
+<meta name="msapplication-TileColor" content="#1a3a5c">
+<meta name="msapplication-tap-highlight" content="no">
+<!-- Manifest & Icons generated at runtime -->
+<script id="pwa-bootstrap">
+(function(){
+  function makeIcon(size, bg, fg) {
+    var c = document.createElement('canvas');
+    c.width = c.height = size;
+    var ctx = c.getContext('2d');
+    ctx.fillStyle = bg; ctx.fillRect(0,0,size,size);
+    ctx.strokeStyle = fg; ctx.lineWidth = size*0.04;
+    ctx.beginPath(); ctx.arc(size/2,size/2,size*0.42,0,Math.PI*2); ctx.stroke();
+    var s=size/4, cx=size/2, cy=size*0.42;
+    ctx.fillStyle = fg;
+    ctx.beginPath(); ctx.arc(cx,cy,s*0.7,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx-s*0.35,cy+s*0.5); ctx.lineTo(cx,cy+s*1.4); ctx.lineTo(cx+s*0.35,cy+s*0.5); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(cx,cy,s*0.28,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font='bold '+Math.round(size*0.18)+'px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('🌿',cx,cy);
+    return c.toDataURL('image/png');
+  }
+  window._i192 = makeIcon(192,'#1a3a5c','#4bafd9');
+  window._i512 = makeIcon(512,'#1a3a5c','#4bafd9');
+  var manifest = {
+    name:"Vistoria Ambiental de Campo",short_name:"Vistoria Amb.",
+    description:"Formulário de vistoria ambiental – Afaplan / Equatorial Energia",
+    start_url:"./",display:"standalone",orientation:"portrait-primary",
+    background_color:"#1a3a5c",theme_color:"#1a3a5c",lang:"pt-BR",
+    icons:[
+      {src:window._i192,sizes:"192x192",type:"image/png",purpose:"any maskable"},
+      {src:window._i512,sizes:"512x512",type:"image/png",purpose:"any maskable"}
+    ]
+  };
+  var blob = new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
+  var link = document.createElement('link'); link.rel='manifest'; link.href=URL.createObjectURL(blob);
+  document.head.appendChild(link);
+  window.addEventListener('DOMContentLoaded',function(){
+    var al=document.createElement('link'); al.rel='apple-touch-icon'; al.href=window._i192; document.head.appendChild(al);
+    var fl=document.createElement('link'); fl.rel='icon'; fl.type='image/png'; fl.href=window._i192; document.head.appendChild(fl);
+  });
+})();
+<\/script>
+<style>
+  :root {
+    --navy:    #1a3a5c;
+    --teal:    #2a7faf;
+    --tealL:   #4bafd9;
+    --ice:     #eaf5fb;
+    --amber:   #f5a623;
+    --amberL:  #fef0d0;
+    --danger:  #c0392b;
+    --dangerL: #fdedec;
+    --warn:    #e67e22;
+    --warnL:   #fdebd0;
+    --ok:      #1e8449;
+    --okL:     #eafaf1;
+    --purple:  #6c3483;
+    --purpleL: #f3e5f5;
+    --surface: #f0f5fa;
+    --card:    #ffffff;
+    --border:  #c8d8e8;
+    --text:    #1a2e3c;
+    --muted:   #4a6a80;
+    --radius:  12px;
+    --shadow:  0 2px 16px rgba(0,0,0,0.07);
+    --shadowL: 0 8px 40px rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  .app-header {
+    background: linear-gradient(135deg, var(--navy) 0%, #1e4e78 60%, var(--teal) 100%);
+    color: white;
+    padding: 18px 18px 0;
+    position: sticky;
+    top: 0;
+    padding-top: env(safe-area-inset-top);
+    z-index: 200;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+  .header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .header-icon {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .header-title { font-family: 'Syne', sans-serif; flex: 1; min-width: 0; }
+  .header-title h1 { font-size: 16px; font-weight: 800; line-height: 1.2; }
+  .header-title p  { font-size: 10.5px; opacity: 0.72; margin-top: 2px; font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* area-type badge */
+  #areaBadge {
+    display: none;
+    align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 11px; font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    margin-bottom: 8px;
+  }
+  #areaBadge.green  { background: rgba(30,132,73,0.25);  color: #6be8a0; border: 1px solid rgba(30,132,73,0.4); }
+  #areaBadge.yellow { background: rgba(245,166,35,0.25); color: #ffd07a; border: 1px solid rgba(245,166,35,0.4); }
+  #areaBadge.red    { background: rgba(192,57,43,0.25);  color: #ff9a9a; border: 1px solid rgba(192,57,43,0.4); }
+
+  /* progress */
+  .progress-wrap { display: flex; align-items: center; gap: 10px; padding: 8px 0 12px; }
+  .progress-bar-bg { flex: 1; height: 5px; background: rgba(255,255,255,0.2); border-radius: 99px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--tealL); border-radius: 99px; transition: width 0.4s ease; width: 0%; }
+  .progress-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; opacity: 0.85; white-space: nowrap; }
+
+  /* tabs */
+  .sections-nav { display: flex; gap: 3px; overflow-x: auto; scrollbar-width: none; }
+  .sections-nav::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    flex-shrink: 0;
+    padding: 7px 12px;
+    border-radius: 8px 8px 0 0;
+    font-size: 11.5px; font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    cursor: pointer;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    border: none; transition: all 0.2s;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .nav-tab.active { background: var(--surface); color: var(--navy); }
+  .nav-tab.done   { color: rgba(255,255,255,0.9); }
+  .nav-tab.done::after { content: ' ✓'; font-size: 10px; color: #6be8a0; }
+  .nav-tab.locked { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── MAIN CONTENT ── */
+  .main { max-width: 700px; margin: 0 auto; padding: 16px 14px 110px; }
+
+  .section-panel { display: none; animation: fadeUp 0.3s ease; }
+  .section-panel.active { display: block; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    background: var(--card);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--teal);
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .section-icon { font-size: 24px; width: 40px; text-align: center; }
+  .section-header h2 { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; color: var(--navy); }
+  .section-header p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  .card-label {
+    font-size: 13px; font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .req { color: var(--danger); font-size: 14px; }
+
+  /* inputs */
+  input[type=text], input[type=number], input[type=date],
+  input[type=time], input[type=email], input[type=tel],
+  select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(42,127,175,0.12);
+    background: white;
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234a6a80' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: calc(100% - 12px) center; padding-right: 36px; }
+
+  /* toggle chips */
+  .chip-group { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2px; }
+  .chip {
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 12.5px; font-weight: 700;
+    background: var(--ice);
+    color: var(--navy);
+    border: 1.5px solid var(--border);
+    cursor: pointer; transition: all 0.15s;
+    user-select: none;
+  }
+  .chip:hover { background: #d0e8f4; }
+  .chip.selected { background: var(--navy); color: white; border-color: var(--navy); }
+  .chip.selected-ok     { background: var(--ok);     color: white; border-color: var(--ok); }
+  .chip.selected-warn   { background: var(--warn);   color: white; border-color: var(--warn); }
+  .chip.selected-danger { background: var(--danger); color: white; border-color: var(--danger); }
+
+  /* radio row */
+  .radio-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  .radio-btn {
+    flex: 1; min-width: 80px;
+    padding: 10px 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer; text-align: center;
+    font-size: 13px; font-weight: 700;
+    transition: all 0.15s;
+    user-select: none;
+    color: var(--muted);
+  }
+  .radio-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .radio-btn.sel-y { background: var(--okL);     border-color: var(--ok);   color: var(--ok); }
+  .radio-btn.sel-n { background: var(--dangerL); border-color: var(--danger); color: var(--danger); }
+  .radio-btn.sel-p { background: var(--warnL);   border-color: var(--warn);  color: var(--warn); }
+  .radio-btn.sel-b { background: var(--ice);     border-color: var(--teal);  color: var(--teal); }
+
+  /* alert banners */
+  .alert {
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border-left: 4px solid;
+    font-size: 13px; line-height: 1.5;
+  }
+  .alert-info   { background: var(--ice);     border-color: var(--teal);   color: #0d3a5c; }
+  .alert-ok     { background: var(--okL);     border-color: var(--ok);     color: #0a3320; }
+  .alert-warn   { background: var(--warnL);   border-color: var(--warn);   color: #5a2800; }
+  .alert-danger { background: var(--dangerL); border-color: var(--danger); color: #4a0a0a; }
+  .alert-purple { background: var(--purpleL); border-color: var(--purple); color: #3a1040; }
+  .alert strong { font-weight: 800; display: block; margin-bottom: 4px; }
+
+  /* dynamic reveal cards */
+  .reveal-card { display: none; margin-top: 8px; }
+  .reveal-card.show { display: block; animation: fadeUp 0.25s ease; }
+
+  /* two column */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 440px) { .two-col { grid-template-columns: 1fr; } .three-col { grid-template-columns: 1fr 1fr; } }
+  .sub-label { font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+
+  /* status row */
+  .status-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .status-dot.green  { background: var(--ok); }
+  .status-dot.yellow { background: var(--amber); }
+  .status-dot.red    { background: var(--danger); }
+
+  /* coordinate display */
+  .coord-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--teal);
+    background: var(--ice);
+    padding: 8px 12px; border-radius: 6px;
+    margin-top: 6px;
+    border: 1px solid rgba(42,127,175,0.3);
+  }
+
+  /* GPS button */
+  .btn-gps {
+    padding: 10px 14px;
+    background: var(--teal);
+    color: white;
+    border: none; border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 6px;
+  }
+  .btn-gps:hover { background: var(--navy); transform: translateY(-1px); }
+  .btn-gps:active { transform: translateY(0); }
+
+  /* photo count */
+  .photo-counter {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: var(--ice);
+    border: 1.5px dashed var(--teal);
+    border-radius: 8px;
+    font-size: 13px; color: var(--teal); font-weight: 700;
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .photo-counter:hover { border-color: var(--navy); color: var(--navy); }
+
+  /* ── NAV BUTTONS ── */
+  .btn-row {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 1px solid var(--border);
+    padding: 11px 14px;
+    padding-bottom: calc(11px + env(safe-area-inset-bottom));
+    display: flex; gap: 9px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    z-index: 300;
+  }
+  @media (min-width: 700px) {
+    .btn-row { left: 50%; transform: translateX(-50%); width: 700px; border-radius: 0; }
+  }
+  .btn {
+    flex: 1; padding: 13px;
+    border-radius: 10px; border: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-outline { background: white; color: var(--muted); border: 2px solid var(--border); }
+  .btn-outline:hover { border-color: var(--teal); color: var(--navy); }
+  .btn-primary { background: linear-gradient(135deg, var(--navy), var(--teal)); color: white; box-shadow: 0 4px 14px rgba(26,58,92,0.3); }
+  .btn-primary:hover { box-shadow: 0 6px 20px rgba(26,58,92,0.4); transform: translateY(-1px); }
+  .btn-submit { background: linear-gradient(135deg, var(--amber), #f39c12); color: white; box-shadow: 0 4px 14px rgba(245,166,35,0.3); }
+  .btn-danger-out { background: white; color: var(--danger); border: 2px solid var(--dangerL); }
+  .btn-danger-out:hover { background: var(--dangerL); }
+
+  /* ── RESULT ── */
+  #result-panel {
+    display: none;
+    padding: 20px 14px 110px;
+    max-width: 700px;
+    margin: 0 auto;
+    animation: fadeUp 0.4s ease;
+  }
+  .result-header {
+    background: linear-gradient(135deg, var(--navy), var(--teal));
+    color: white;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .result-header h2 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; }
+  .result-header p { font-size: 12.5px; opacity: 0.8; margin-top: 4px; }
+
+  .verdict-card { border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; border-left: 5px solid; }
+  .verdict-card.ok     { background: var(--okL);     border-color: var(--ok); }
+  .verdict-card.warn   { background: var(--warnL);   border-color: var(--warn); }
+  .verdict-card.danger { background: var(--dangerL); border-color: var(--danger); }
+  .verdict-card.info   { background: var(--ice);     border-color: var(--teal); }
+  .verdict-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; }
+  .verdict-body  { font-size: 13px; margin-top: 6px; line-height: 1.6; }
+
+  .summary-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow); }
+  .summary-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+  .summary-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid #edf2f7; font-size: 13px; }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-key   { color: var(--muted); flex-shrink: 0; max-width: 48%; }
+  .summary-value { font-weight: 700; color: var(--navy); text-align: right; max-width: 52%; word-break: break-word; }
+
+  .btn-export {
+    width: 100%; padding: 15px;
+    border-radius: 12px;
+    background: var(--navy);
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer;
+    margin-top: 6px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(26,58,92,0.25);
+  }
+  .btn-export:hover { transform: translateY(-2px); }
+  .btn-new {
+    width: 100%; padding: 12px;
+    border-radius: 12px;
+    background: white;
+    color: var(--navy);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700;
+    border: 2px solid var(--border);
+    cursor: pointer; margin-top: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-new:hover { border-color: var(--teal); }
+
+  /* misc */
+  .divider { height: 1px; background: var(--border); margin: 14px 0; }
+  .tag-sm {
+    display: inline-block;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .tag-sm.required { background: #fdecea; color: var(--danger); }
+  .tag-sm.optional { background: #eaf4fd; color: var(--teal); }
+  .tag-sm.auto     { background: var(--amberL); color: #8a5000; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════ HEADER -->
+<header class="app-header">
+  <div class="header-top" style="position:relative;">
+    <div class="header-icon">🌿</div>
+    <div class="header-title">
+      <h1>Vistoria Ambiental de Campo</h1>
+      <p id="headerSub">Afaplan / Equatorial · Preencha o local abaixo</p>
+    </div>
+    <button onclick="showInstallGuide()" style="position:absolute;right:14px;top:14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:8px;padding:5px 10px;font-size:11px;font-family:Syne,sans-serif;font-weight:700;cursor:pointer;z-index:10;">📲 Instalar App</button>
+  </div>
+  <div id="areaBadge">⬤ <span id="areaTypeLabel">–</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <span class="progress-label" id="progressLabel">0 / 7</span>
+  </div>
+  <nav class="sections-nav" id="sectionsNav">
+    <button class="nav-tab active" data-sec="0">📍 Local</button>
+    <button class="nav-tab" data-sec="1">👤 Técnico</button>
+    <button class="nav-tab" data-sec="2">🗺️ Área</button>
+    <button class="nav-tab" data-sec="3">🌱 Vegetação</button>
+    <button class="nav-tab" data-sec="4">🦜 Fauna</button>
+    <button class="nav-tab" data-sec="5">⚡ Projeto</button>
+    <button class="nav-tab" data-sec="6">⚠️ Riscos</button>
+  </nav>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════════ FORM -->
+<div class="main" id="mainContent">
+
+  <!-- ════════════════════════════════════════ 0 · LOCAL -->
+  <div class="section-panel active" id="sec0">
+    <div class="section-header">
+      <div class="section-icon">📍</div>
+      <div>
+        <h2>Identificação do Local</h2>
+        <p>Preencha os dados do local a ser vistoriado</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Nome / código do local vistoriado <span class="req">*</span></div>
+      <input type="text" id="nomeLocal" placeholder="Ex.: Trecho LP-002, Obra EOTL-23, Conjunto Araguaia..." oninput="updateAll()">
+    </div>
+
+    <div class="card">
+      <div class="card-label">Município e Estado <span class="req">*</span></div>
+      <div class="two-col">
+        <div>
+          <div class="sub-label">Município</div>
+          <input type="text" id="municipio" placeholder="Ex.: Marabá" oninput="updateAll()">
+        </div>
+        <div>
+          <div class="sub-label">Estado (UF)</div>
+          <select id="estado" onchange="updateAll()">
+            <option value="">Selecione</option>
+            <option value="AC">AC</option><option value="AL">AL</option><option value="AM">AM</option>
+            <option value="AP">AP</option><option value="BA">BA</option><option value="CE">CE</option>
+            <option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option>
+            <option value="MA">MA</option><option value="MG">MG</option><option value="MS">MS</option>
+            <option value="MT">MT</option><option value="PA" selected>PA</option><option value="PB">PB</option>
+            <option value="PE">PE</option><option value="PI">PI</option><option value="PR">PR</option>
+            <option value="RJ">RJ</option><option value="RN">RN</option><option value="RO">RO</option>
+            <option value="RR">RR</option><option value="RS">RS</option><option value="SC">SC</option>
+            <option value="SE">SE</option><option value="SP">SP</option><option value="TO">TO</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Coordenadas GPS do ponto inicial <span class="tag-sm optional">Recomendado</span></div>
+      <div class="two-col">
+        <div>
+          <div class="sub-label">Latitude</div>
+          <input type="text" id="latInicio" placeholder="-5.123456" oninput="updateAll()">
+        </div>
+        <div>
+          <div class="sub-label">Longitude</div>
+          <input type="text" id="lonInicio" placeholder="-49.654321" oninput="updateAll()">
+        </div>
+      </div>
+      <button class="btn-gps" onclick="getGPS('latInicio','lonInicio')">📡 Capturar GPS agora</button>
+      <div class="coord-display" id="gpsDisplay0" style="display:none"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Tipo de obra / projeto <span class="req">*</span></div>
+      <select id="tipoObra" onchange="updateAll()">
+        <option value="">Selecione o tipo</option>
+        <optgroup label="Distribuição Elétrica">
+          <option value="rede_nova_rural">Rede Nova – Rural</option>
+          <option value="rede_nova_urbana">Rede Nova – Urbana</option>
+          <option value="recondutoramento">Recondutoramento / Adequação de Rede</option>
+          <option value="bt_conjugada">Rede BT Conjugada em MT Existente</option>
+          <option value="intercalacao">Intercalação de Poste ou Trafo</option>
+          <option value="subestacao">Subestação / Transformador</option>
+          <option value="lt_mt">Linha de Transmissão MT</option>
+        </optgroup>
+        <optgroup label="Civil / Infraestrutura">
+          <option value="acesso_viario">Abertura / Melhoria de Acesso Viário</option>
+          <option value="travessia">Travessia de Rio ou Rodovia</option>
+          <option value="terraplanagem">Terraplanagem</option>
+          <option value="edificacao">Edificação / Galpão</option>
+        </optgroup>
+        <optgroup label="Outros">
+          <option value="outro">Outro (descrever)</option>
+        </optgroup>
+      </select>
+      <div class="reveal-card" id="rc-tipoOutro">
+        <input type="text" id="tipoObraOutro" placeholder="Descreva o tipo de obra/projeto" style="margin-top:8px">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Extensão estimada do traçado / obra</div>
+      <div class="two-col">
+        <div>
+          <div class="sub-label">Comprimento</div>
+          <input type="number" id="extKm" placeholder="Ex.: 2.5" step="0.1" min="0">
+        </div>
+        <div>
+          <div class="sub-label">Unidade</div>
+          <select id="extUnidade">
+            <option value="km">km</option>
+            <option value="m">metros</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sec0 -->
+
+  <!-- ════════════════════════════════════════ 1 · TÉCNICO -->
+  <div class="section-panel" id="sec1">
+    <div class="section-header">
+      <div class="section-icon">👤</div>
+      <div>
+        <h2>Dados do Técnico</h2>
+        <p>Responsável pela vistoria e equipe presente</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Técnico responsável pela vistoria <span class="req">*</span></div>
+      <input type="text" id="tecnico" placeholder="Nome completo" oninput="updateAll()">
+    </div>
+
+    <div class="card">
+      <div class="card-label">Registro profissional (CREA/CRBio/CRGeo)</div>
+      <input type="text" id="registro" placeholder="Ex.: CREA-PA 123456/D">
+    </div>
+
+    <div class="card">
+      <div class="card-label">Empresa / contratante</div>
+      <div class="two-col">
+        <div>
+          <div class="sub-label">Empresa executora</div>
+          <input type="text" id="empresa" value="Afaplan" placeholder="Empresa">
+        </div>
+        <div>
+          <div class="sub-label">Contratante</div>
+          <input type="text" id="contratante" value="Equatorial Energia" placeholder="Contratante">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Data e horário <span class="req">*</span></div>
+      <div class="two-col">
+        <div>
+          <div class="sub-label">Data da vistoria</div>
+          <input type="date" id="dataVisita" oninput="updateAll()">
+        </div>
+        <div>
+          <div class="sub-label">Hora início</div>
+          <input type="time" id="horaInicio">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Condições climáticas no momento da vistoria</div>
+      <div class="chip-group">
+        <span class="chip" onclick="toggleChip(this,'clima')">☀️ Ensolarado</span>
+        <span class="chip" onclick="toggleChip(this,'clima')">⛅ Parcialmente nublado</span>
+        <span class="chip" onclick="toggleChip(this,'clima')">🌧️ Chuva fraca</span>
+        <span class="chip" onclick="toggleChip(this,'clima')">⛈️ Chuva forte</span>
+        <span class="chip" onclick="toggleChip(this,'clima')">🌫️ Neblina</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Outros membros da equipe em campo</div>
+      <textarea id="equipeOutros" placeholder="Nome e função de outros técnicos presentes" rows="3"></textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Número de fotografias tiradas <span class="tag-sm optional">Registrar</span></div>
+      <input type="number" id="nFotos" placeholder="Ex.: 24" min="0">
+      <div class="alert alert-info" style="margin-top:10px;font-size:12px;">
+        📷 <strong>Padrão de nomenclatura:</strong> AAAA-MM-DD_LOC-XXX_TIPO (ex: 2026-03-16_LP002_APP). Enviar backup ao coordenador no mesmo dia.
+      </div>
+    </div>
+
+  </div><!-- /sec1 -->
+
+  <!-- ════════════════════════════════════════ 2 · CLASSIFICAÇÃO DA ÁREA -->
+  <div class="section-panel" id="sec2">
+    <div class="section-header">
+      <div class="section-icon">🗺️</div>
+      <div>
+        <h2>Classificação da Área</h2>
+        <p>Defina o tipo e sensibilidade do local</p>
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>🗺️ Consulte sempre o mapa GIS antes de classificar.</strong>
+      A empresa de projetos é responsável pela identificação prévia de áreas especiais.
+    </div>
+
+    <!-- Zona -->
+    <div class="card">
+      <div class="card-label">Zona predominante da área <span class="req">*</span></div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'zona','rural_aberto','b')">🌾 Rural aberta</div>
+        <div class="radio-btn" onclick="radioSelect(this,'zona','rural_florestal','b')">🌳 Rural florestal</div>
+        <div class="radio-btn" onclick="radioSelect(this,'zona','urbana','b')">🏘️ Urbana</div>
+        <div class="radio-btn" onclick="radioSelect(this,'zona','periurbana','b')">🏠 Periurbana</div>
+      </div>
+    </div>
+
+    <!-- Tipo de área especial -->
+    <div class="card">
+      <div class="card-label">A área possui alguma restrição ambiental especial? <span class="req">*</span></div>
+      <div class="chip-group" id="areaEspecialChips">
+        <span class="chip" onclick="toggleAreaEspecial(this,'nenhuma')">✅ Nenhuma</span>
+        <span class="chip" onclick="toggleAreaEspecial(this,'uc_estadual')">🟡 UC Estadual</span>
+        <span class="chip" onclick="toggleAreaEspecial(this,'uc_federal')">🔴 UC Federal</span>
+        <span class="chip" onclick="toggleAreaEspecial(this,'ti')">🔴 Terra Indígena</span>
+        <span class="chip" onclick="toggleAreaEspecial(this,'quilombola')">🟡 Quilombola</span>
+        <span class="chip" onclick="toggleAreaEspecial(this,'patrimonio')">🟡 Patrimônio/IPHAN</span>
+        <span class="chip" onclick="toggleAreaEspecial(this,'app')">🔴 APP no traçado</span>
+        <span class="chip" onclick="toggleAreaEspecial(this,'nao_confirmado')">❓ A confirmar</span>
+      </div>
+    </div>
+
+    <!-- Painel NENHUMA (verde) -->
+    <div class="reveal-card" id="panel-nenhuma">
+      <div class="alert alert-ok">
+        <strong>✅ ÁREA NÃO SENSÍVEL — processo simplificado</strong>
+        Sem restrições identificadas. Verifique a necessidade de supressão vegetal para definir se há <strong>Dispensa Ambiental</strong> ou se a obra não requer nenhum processo.
+      </div>
+      <div class="card">
+        <div class="card-label">A obra requer supressão de vegetação nativa? <span class="req">*</span></div>
+        <div class="radio-row">
+          <div class="radio-btn" onclick="radioSelect(this,'supressaoNSens','nao_supressao','n')" id="rbSupNao">❌ Não</div>
+          <div class="radio-btn" onclick="radioSelect(this,'supressaoNSens','sim_supressao','y')" id="rbSupSim">✅ Sim</div>
+          <div class="radio-btn" onclick="radioSelect(this,'supressaoNSens','duvida_supressao','p')" id="rbSupDuv">❓ A confirmar</div>
+        </div>
+        <div class="reveal-card" id="panel-sem-supressao" style="margin-top:8px;">
+          <div class="alert alert-ok" style="font-size:12.5px;">
+            <strong>✅ DISPENSA AMBIENTAL</strong> — Encaminhar <em>Relatório Comprobatório</em> ao SEMAS/SEMMA com dados desta vistoria.
+            <br><br>Situações típicas de dispensa:<br>
+            • Intercalação de poste/trafo em rede MT existente (KM zero), fora de TI/UC<br>
+            • Rede BT conjugada em MT existente, fora de TI/UC<br>
+            • Obras urbanas sem supressão em geral<br>
+            • Adição de fase / recondutoramento sem supressão, fora de TI/UC
+          </div>
+        </div>
+        <div class="reveal-card" id="panel-com-supressao" style="margin-top:8px;">
+          <div class="alert alert-warn" style="font-size:12.5px;">
+            <strong>⚠️ NECESSITA ASV — Autorização de Supressão Vegetal</strong>
+            <br>Protocolo no SEMAS (estadual) ou IBAMA (se impacto nacional). Prazo mínimo: ~25 dias.
+            <br>Preencha a seção de Vegetação com detalhamento da supressão estimada.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel UC ESTADUAL -->
+    <div class="reveal-card" id="panel-uc_estadual">
+      <div class="alert alert-warn">
+        <strong>🟡 UC ESTADUAL (SEMAS-PA)</strong>
+        Impacto regional, UCs estaduais e obras em 2+ municípios. Exige ASV para supressão vegetal. Dispensas mediante cadastro no órgão.
+      </div>
+      <div class="card">
+        <div class="card-label">Nome da UC identificada</div>
+        <input type="text" id="nomeUCEstadual" placeholder="Ex.: FLOTA Tapajós, APA Alter do Chão...">
+      </div>
+      <div class="card">
+        <div class="card-label">Tipo de interferência</div>
+        <div class="chip-group">
+          <span class="chip" onclick="toggleChip(this,'intUCEst')">Traçado dentro da UC</span>
+          <span class="chip" onclick="toggleChip(this,'intUCEst')">Traçado margeia a UC</span>
+          <span class="chip" onclick="toggleChip(this,'intUCEst')">Zona de amortecimento</span>
+          <span class="chip" onclick="toggleChip(this,'intUCEst')">APA – área liberada</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel UC FEDERAL -->
+    <div class="reveal-card" id="panel-uc_federal">
+      <div class="alert alert-danger">
+        <strong>🔴 UC FEDERAL (IBAMA / ICMBio)</strong>
+        Protocolo no IBAMA/ICMBio. Emite licença/autorização específica por obra. Impacto nacional ou interferência em UCs federais.
+      </div>
+      <div class="card">
+        <div class="card-label">Nome da UC Federal identificada</div>
+        <input type="text" id="nomeUCFederal" placeholder="Ex.: RESEX Maracanã, FLONA Tapajós...">
+      </div>
+    </div>
+
+    <!-- Painel TI -->
+    <div class="reveal-card" id="panel-ti">
+      <div class="alert alert-danger">
+        <strong>🔴 TERRA INDÍGENA (FUNAI + ICMBio)</strong>
+        Exige autorização específica ANTES de entrar na área, mesmo para vistoria. Protocolo FUNAI + ICMBio. Contato prévio com lideranças obrigatório.
+      </div>
+      <div class="card">
+        <div class="card-label">Nome da Terra Indígena</div>
+        <input type="text" id="nomeTI" placeholder="Ex.: TI Mãe Maria, TI Parakanã...">
+      </div>
+      <div class="card">
+        <div class="card-label">Autorização FUNAI obtida? <span class="req">*</span></div>
+        <div class="radio-row">
+          <div class="radio-btn" onclick="radioSelect(this,'authFUNAI','sim','y')">✅ Sim</div>
+          <div class="radio-btn" onclick="radioSelect(this,'authFUNAI','nao','n')">❌ Não (interromper)</div>
+          <div class="radio-btn" onclick="radioSelect(this,'authFUNAI','em_andamento','p')">⏳ Em andamento</div>
+        </div>
+        <div class="reveal-card" id="panel-funai-nao" style="margin-top:8px;">
+          <div class="alert alert-danger"><strong>🚫 INTERROMPER VISTORIA.</strong> Sem autorização FUNAI é crime. Retornar ao veículo e acionar a coordenação.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Nº da autorização FUNAI (se disponível)</div>
+        <input type="text" id="numAuthFUNAI" placeholder="Nº do ofício ou autorização">
+      </div>
+      <div class="card">
+        <div class="card-label">Aldeia(s) impactadas identificadas</div>
+        <textarea id="aldeiasTI" rows="2" placeholder="Nome das aldeias dentro ou próximas ao traçado"></textarea>
+      </div>
+    </div>
+
+    <!-- Painel QUILOMBOLA -->
+    <div class="reveal-card" id="panel-quilombola">
+      <div class="alert alert-warn">
+        <strong>🟡 TERRITÓRIO QUILOMBOLA (INCRA)</strong>
+        Eventual necessidade de anuência das lideranças. Verificar com coordenação antes de iniciar vistoria.
+      </div>
+      <div class="card">
+        <div class="card-label">Nome do território quilombola</div>
+        <input type="text" id="nomeQuilombola" placeholder="Ex.: Quilombo Guajará Miri, Quilombo Bom Jardim...">
+      </div>
+      <div class="card">
+        <div class="card-label">Anuência das lideranças</div>
+        <div class="radio-row">
+          <div class="radio-btn" onclick="radioSelect(this,'anuenciaQbla','sim','y')">✅ Obtida</div>
+          <div class="radio-btn" onclick="radioSelect(this,'anuenciaQbla','nao','n')">❌ Não obtida</div>
+          <div class="radio-btn" onclick="radioSelect(this,'anuenciaQbla','na','b')">N/A</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel PATRIMÔNIO -->
+    <div class="reveal-card" id="panel-patrimonio">
+      <div class="alert alert-warn">
+        <strong>🟡 PATRIMÔNIO / IPHAN</strong>
+        Sítios arqueológicos ou prédios tombados. Necessita de profissional específico para estudo antropológico/arqueológico. Qualquer achado em campo: PARAR imediatamente.
+      </div>
+      <div class="card">
+        <div class="card-label">Tipo de interferência com patrimônio</div>
+        <div class="chip-group">
+          <span class="chip" onclick="toggleChip(this,'tipPatrimonio')">Sítio arqueológico mapeado</span>
+          <span class="chip" onclick="toggleChip(this,'tipPatrimonio')">Edificação tombada (IPHAN)</span>
+          <span class="chip" onclick="toggleChip(this,'tipPatrimonio')">Área de potencial arqueológico</span>
+          <span class="chip" onclick="toggleChip(this,'tipPatrimonio')">Achado casual em campo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel APP -->
+    <div class="reveal-card" id="panel-app">
+      <div class="alert alert-danger">
+        <strong>🔴 APP NO TRAÇADO</strong>
+        Área de Preservação Permanente identificada. Supressão proibida sem ASV aprovada. Redesenhar traçado evitando a APP sempre que possível.
+      </div>
+      <div class="card">
+        <div class="card-label">Tipo de APP identificada</div>
+        <div class="chip-group">
+          <span class="chip" onclick="toggleChip(this,'tipoAPP')">Margem de rio</span>
+          <span class="chip" onclick="toggleChip(this,'tipoAPP')">Margem de igarapé</span>
+          <span class="chip" onclick="toggleChip(this,'tipoAPP')">Entorno de nascente (50m)</span>
+          <span class="chip" onclick="toggleChip(this,'tipoAPP')">Topo de morro</span>
+          <span class="chip" onclick="toggleChip(this,'tipoAPP')">Restinga / Manguezal</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Extensão da APP no traçado (estimativa)</div>
+        <div class="two-col">
+          <div><div class="sub-label">Metros lineares</div><input type="number" id="extAPP" placeholder="Ex.: 80" min="0"></div>
+          <div><div class="sub-label">% do traçado total</div><input type="number" id="percAPP" placeholder="Ex.: 15" min="0" max="100"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">É possível desvio do traçado para evitar APP?</div>
+        <div class="radio-row">
+          <div class="radio-btn" onclick="radioSelect(this,'desvioAPP','sim','y')">✅ Sim</div>
+          <div class="radio-btn" onclick="radioSelect(this,'desvioAPP','nao','n')">❌ Não</div>
+          <div class="radio-btn" onclick="radioSelect(this,'desvioAPP','parcial','p')">⚠️ Parcial</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel A CONFIRMAR -->
+    <div class="reveal-card" id="panel-nao_confirmado">
+      <div class="alert alert-purple">
+        <strong>❓ CLASSIFICAÇÃO A CONFIRMAR</strong>
+        Registre as dúvidas abaixo. O coordenador ambiental deve ser consultado antes de qualquer serviço.
+      </div>
+      <div class="card">
+        <div class="card-label">Descreva a dúvida ou situação a confirmar</div>
+        <textarea id="duvidasArea" rows="3" placeholder="Ex.: Possível proximidade com UC estadual não mapeada no GIS..."></textarea>
+      </div>
+    </div>
+
+  </div><!-- /sec2 -->
+
+  <!-- ════════════════════════════════════════ 3 · VEGETAÇÃO -->
+  <div class="section-panel" id="sec3">
+    <div class="section-header">
+      <div class="section-icon">🌱</div>
+      <div>
+        <h2>Vegetação e APP</h2>
+        <p>Tipologia, supressão estimada e APP no traçado</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Tipologia(s) de vegetação presente(s) no traçado <span class="req">*</span></div>
+      <div class="chip-group">
+        <span class="chip" onclick="toggleChip(this,'vegTipo')">Sem vegetação / área aberta</span>
+        <span class="chip" onclick="toggleChip(this,'vegTipo')">Pasto / lavoura</span>
+        <span class="chip" onclick="toggleChip(this,'vegTipo')">Capoeira fina (< 5 anos)</span>
+        <span class="chip" onclick="toggleChip(this,'vegTipo')">Capoeira média (5–15 anos)</span>
+        <span class="chip" onclick="toggleChip(this,'vegTipo')">Floresta secundária</span>
+        <span class="chip" onclick="toggleChip(this,'vegTipo')">Floresta primária</span>
+        <span class="chip" onclick="toggleChip(this,'vegTipo')">Várzea / igapó</span>
+        <span class="chip" onclick="toggleChip(this,'vegTipo')">APP (mata ciliar)</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Há supressão vegetal prevista? <span class="req">*</span></div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'supressao','nao','n')">❌ Não</div>
+        <div class="radio-btn" onclick="radioSelect(this,'supressao','sim','y')">✅ Sim</div>
+        <div class="radio-btn" onclick="radioSelect(this,'supressao','duvida','p')">⚠️ A confirmar</div>
+      </div>
+    </div>
+
+    <div class="reveal-card" id="panel-supressao-veg" style="margin-top:0;">
+      <div class="card">
+        <div class="card-label">Área estimada de supressão</div>
+        <div class="two-col">
+          <div><div class="sub-label">Hectares (ha)</div><input type="number" id="supressaoHa" placeholder="Ex.: 0.5" step="0.01" min="0"></div>
+          <div><div class="sub-label">Metros lineares</div><input type="number" id="supressaoM" placeholder="Ex.: 250" min="0"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Planos exigidos para supressão <span class="tag-sm auto">Auto-selecionados</span></div>
+        <div class="status-row"><div class="status-dot red"></div><span>Plano de Supressão RDR (inventário florestal)</span></div>
+        <div class="status-row"><div class="status-dot red"></div><span>Plano Operacional de Supressão</span></div>
+        <div class="status-row"><div class="status-dot red"></div><span>ASV — Autorização de Supressão Vegetal (SEMAS ou IBAMA)</span></div>
+        <div class="status-row"><div class="status-dot yellow"></div><span>Plano de Afugentamento de Fauna (antes do corte)</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Espécies protegidas observadas no traçado?</div>
+        <div class="radio-row">
+          <div class="radio-btn" onclick="radioSelect(this,'espProt','nao','n')">❌ Não</div>
+          <div class="radio-btn" onclick="radioSelect(this,'espProt','sim','y')">⚠️ Sim</div>
+          <div class="radio-btn" onclick="radioSelect(this,'espProt','duvida','p')">❓ A confirmar</div>
+        </div>
+        <div class="reveal-card" id="panel-esp-prot">
+          <div class="alert alert-danger" style="margin-top:8px;font-size:12.5px;">
+            <strong>🔴 Espécie protegida identificada.</strong> Registrar coordenada GPS, fotografia e nome da espécie (se possível). Traçado deve ser redesenhado com afastamento mínimo. Comunicar coordenador imediatamente.
+          </div>
+          <textarea id="descEspProt" rows="2" placeholder="Espécie(s), quantidade aproximada, coordenadas GPS" style="margin-top:8px"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Há fragmento florestal contínuo interceptado pelo traçado?</div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'fragmento','nao','n')">❌ Não</div>
+        <div class="radio-btn" onclick="radioSelect(this,'fragmento','sim_pequeno','p')">⚠️ Sim – pequeno</div>
+        <div class="radio-btn" onclick="radioSelect(this,'fragmento','sim_grande','y')">🔴 Sim – extenso</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Há desvio de traçado possível para evitar supressão?</div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'desvioTraçado','sim','y')">✅ Sim</div>
+        <div class="radio-btn" onclick="radioSelect(this,'desvioTraçado','nao','n')">❌ Não</div>
+        <div class="radio-btn" onclick="radioSelect(this,'desvioTraçado','parcial','p')">⚠️ Parcial</div>
+      </div>
+      <div class="reveal-card" id="panel-desvio-desc">
+        <textarea id="descDesvio" rows="2" placeholder="Descreva o desvio sugerido / coordenadas do novo traçado" style="margin-top:8px"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Observações sobre vegetação / APP</div>
+      <textarea id="obsVeg" rows="3" placeholder="Condição da vegetação, presença de APP hídrica, estado de conservação..."></textarea>
+    </div>
+
+  </div><!-- /sec3 -->
+
+  <!-- ════════════════════════════════════════ 4 · FAUNA -->
+  <div class="section-panel" id="sec4">
+    <div class="section-header">
+      <div class="section-icon">🦜</div>
+      <div>
+        <h2>Fauna Silvestre</h2>
+        <p>Registros e ocorrências de fauna no traçado</p>
+      </div>
+    </div>
+
+    <div class="alert alert-warn" style="font-size:12.5px;">
+      <strong>⚠️ LEMBRETE:</strong> Jamais capturar, tocar ou perturbar animais. Registrar espécie, coordenada GPS e fotografia à distância segura.
+    </div>
+
+    <div class="card">
+      <div class="card-label">Grupos faunísticos registrados no traçado</div>
+      <div class="chip-group">
+        <span class="chip" onclick="toggleChip(this,'faunaGrupo')">Nenhum registro</span>
+        <span class="chip" onclick="toggleChip(this,'faunaGrupo')">🦜 Aves (rapina / psitacídeos)</span>
+        <span class="chip" onclick="toggleChip(this,'faunaGrupo')">🐒 Primatas</span>
+        <span class="chip" onclick="toggleChip(this,'faunaGrupo')">🦌 Mamíferos de grande porte</span>
+        <span class="chip" onclick="toggleChip(this,'faunaGrupo')">🐊 Répteis</span>
+        <span class="chip" onclick="toggleChip(this,'faunaGrupo')">🐸 Anfíbios</span>
+        <span class="chip" onclick="toggleChip(this,'faunaGrupo')">🐍 Serpentes</span>
+        <span class="chip" onclick="toggleChip(this,'faunaGrupo')">🪺 Ninhos ativos</span>
+        <span class="chip" onclick="toggleChip(this,'faunaGrupo')">🐾 Rastros / tocas</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Espécies ameaçadas ou protegidas identificadas?</div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'faunaAmeacada','nao','n')">❌ Não</div>
+        <div class="radio-btn" onclick="radioSelect(this,'faunaAmeacada','sim','y')">🔴 Sim</div>
+        <div class="radio-btn" onclick="radioSelect(this,'faunaAmeacada','incerto','p')">❓ Incerto</div>
+      </div>
+      <div class="reveal-card" id="panel-fauna-ameacada">
+        <div class="alert alert-danger" style="margin-top:8px;font-size:12.5px;">
+          <strong>🔴 Comunicar o biólogo da equipe imediatamente.</strong> Registrar espécie, quantidade, coordenadas GPS e fotos. Pode exigir Plano de Afugentamento de Fauna antes de qualquer supressão.
+        </div>
+        <textarea id="descFaunaAmeacada" rows="2" placeholder="Espécie(s), quantidade aproximada, localização no traçado" style="margin-top:8px"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Ninhos ou tocas ativos no traçado ou área de influência direta?</div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'ninhosAtivos','nao','n')">❌ Não</div>
+        <div class="radio-btn" onclick="radioSelect(this,'ninhosAtivos','sim','y')">⚠️ Sim</div>
+      </div>
+      <div class="reveal-card" id="panel-ninhos">
+        <div class="card" style="margin-top:8px;border-color:#f5b8b8;">
+          <div class="card-label">Descrição dos ninhos / tocas</div>
+          <textarea id="descNinhos" rows="2" placeholder="Espécie, localização no traçado, coordenada GPS, ação recomendada"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Sítio arqueológico ou achado em campo?</div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'achAdArq','nao','n')">❌ Não</div>
+        <div class="radio-btn" onclick="radioSelect(this,'achAdArq','sim','y')">🔴 Sim (PARAR)</div>
+      </div>
+      <div class="reveal-card" id="panel-arqueologico">
+        <div class="alert alert-danger" style="margin-top:8px;">
+          <strong>🚫 PARALISAR IMEDIATAMENTE.</strong> Não tocar, não deslocar. Fotografar, registrar GPS, comunicar coordenação e IPHAN (0800 020 5817).
+        </div>
+        <textarea id="descArqueologico" rows="2" placeholder="Descreva o achado, coordenada GPS" style="margin-top:8px"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Observações gerais sobre fauna</div>
+      <textarea id="obsFauna" rows="3" placeholder="Frequência de registros, período do dia, comportamento observado..."></textarea>
+    </div>
+
+  </div><!-- /sec4 -->
+
+  <!-- ════════════════════════════════════════ 5 · PROJETO / TRAÇADO -->
+  <div class="section-panel" id="sec5">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <div>
+        <h2>Avaliação do Projeto / Traçado</h2>
+        <p>Características do traçado e condições de campo</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Acesso ao traçado</div>
+      <div class="chip-group">
+        <span class="chip" onclick="toggleChip(this,'acesso')">Estrada oficial pavimentada</span>
+        <span class="chip" onclick="toggleChip(this,'acesso')">Ramal de terra / vicinal</span>
+        <span class="chip" onclick="toggleChip(this,'acesso')">Trilha / aceiro</span>
+        <span class="chip" onclick="toggleChip(this,'acesso')">Sem acesso definido</span>
+        <span class="chip" onclick="toggleChip(this,'acesso')">Travessia fluvial necessária</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Condições do solo / terreno</div>
+      <div class="chip-group">
+        <span class="chip" onclick="toggleChip(this,'solo')">Plano / regular</span>
+        <span class="chip" onclick="toggleChip(this,'solo')">Ondulado</span>
+        <span class="chip" onclick="toggleChip(this,'solo')">Rochoso</span>
+        <span class="chip" onclick="toggleChip(this,'solo')">Alagado / encharcado</span>
+        <span class="chip" onclick="toggleChip(this,'solo')">Solo instável / erosão</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Existência de rede de distribuição prévia no traçado?</div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'redePrev','nao','n')">❌ Não</div>
+        <div class="radio-btn" onclick="radioSelect(this,'redePrev','sim_total','y')">✅ Sim – total</div>
+        <div class="radio-btn" onclick="radioSelect(this,'redePrev','sim_parcial','p')">⚠️ Parcial</div>
+      </div>
+      <div class="reveal-card" id="panel-rede-prev">
+        <div class="card" style="margin-top:8px;">
+          <div class="card-label">Qual concessionária / responsável?</div>
+          <input type="text" id="redesExistente" placeholder="Ex.: Eletronorte, outra distribuidora...">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Travessia de rodovia, ferrovia ou rio no traçado?</div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'travessia','nao','n')">❌ Não</div>
+        <div class="radio-btn" onclick="radioSelect(this,'travessia','sim','y')">⚠️ Sim</div>
+      </div>
+      <div class="reveal-card" id="panel-travessia">
+        <div class="card" style="margin-top:8px;">
+          <div class="card-label">Tipo(s) de travessia</div>
+          <div class="chip-group">
+            <span class="chip" onclick="toggleChip(this,'tipTravessia')">Rodovia federal (DNIT)</span>
+            <span class="chip" onclick="toggleChip(this,'tipTravessia')">Rodovia estadual</span>
+            <span class="chip" onclick="toggleChip(this,'tipTravessia')">Ferrovia (VALE/EFVM)</span>
+            <span class="chip" onclick="toggleChip(this,'tipTravessia')">Rio / curso d'água</span>
+            <span class="chip" onclick="toggleChip(this,'tipTravessia')">Via municipal</span>
+          </div>
+          <div class="alert alert-warn" style="margin-top:8px;font-size:12px;">
+            <strong>Atenção:</strong> Travessias de rodovias e ferrovias exigem <strong>Autorização de Passagem</strong> do órgão responsável (DNIT / ANTT / concessionária). Fornecer ao estudo ambiental como documentação complementar.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Intervenção em área tombada pelo IPHAN?</div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'iphan','nao','n')">❌ Não</div>
+        <div class="radio-btn" onclick="radioSelect(this,'iphan','sim','y')">🟡 Sim</div>
+        <div class="radio-btn" onclick="radioSelect(this,'iphan','duvida','p')">❓ Verificar</div>
+      </div>
+      <div class="reveal-card" id="panel-iphan">
+        <div class="alert alert-warn" style="margin-top:8px;font-size:12.5px;">
+          <strong>IPHAN:</strong> Necessária autorização específica para qualquer intervenção em prédio ou sítio tombado. Pena: 1 a 3 anos + multa R$ 10.000 a R$ 200.000 (Art. 63 Lei 9.605/98).
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Coordenadas do ponto final do traçado</div>
+      <div class="two-col">
+        <div><div class="sub-label">Latitude</div><input type="text" id="latFim" placeholder="-5.234567"></div>
+        <div><div class="sub-label">Longitude</div><input type="text" id="lonFim" placeholder="-49.765432"></div>
+      </div>
+      <button class="btn-gps" onclick="getGPS('latFim','lonFim')">📡 Capturar GPS agora</button>
+      <div class="coord-display" id="gpsDisplay1" style="display:none"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Observações sobre o projeto / traçado</div>
+      <textarea id="obsTracado" rows="3" placeholder="Pontos críticos, interferências identificadas, sugestões de ajuste no traçado..."></textarea>
+    </div>
+
+  </div><!-- /sec5 -->
+
+  <!-- ════════════════════════════════════════ 6 · RISCOS E CONCLUSÃO -->
+  <div class="section-panel" id="sec6">
+    <div class="section-header">
+      <div class="section-icon">⚠️</div>
+      <div>
+        <h2>Riscos, Pendências e Conclusão</h2>
+        <p>Riscos identificados, ações necessárias e parecer final</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Riscos identificados no campo</div>
+      <div class="chip-group">
+        <span class="chip" onclick="toggleChip(this,'riscos')">Nenhum risco identificado</span>
+        <span class="chip" onclick="toggleChip(this,'riscos')">🐍 Animais peçonhentos</span>
+        <span class="chip" onclick="toggleChip(this,'riscos')">🌊 Alagamentos / acesso difícil</span>
+        <span class="chip" onclick="toggleChip(this,'riscos')">⛏️ Solo instável / erosão</span>
+        <span class="chip" onclick="toggleChip(this,'riscos')">🔥 Risco de incêndio / queimada</span>
+        <span class="chip" onclick="toggleChip(this,'riscos')">👥 Conflito social / acesso negado</span>
+        <span class="chip" onclick="toggleChip(this,'riscos')">🏗️ Obras de terceiros sobrepostas</span>
+        <span class="chip" onclick="toggleChip(this,'riscos')">📡 Sem sinal de GPS / comunicação</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Geração de resíduos sólidos prevista?</div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'residuos','minima','b')">🟢 Mínima</div>
+        <div class="radio-btn" onclick="radioSelect(this,'residuos','media','p')">🟡 Moderada</div>
+        <div class="radio-btn" onclick="radioSelect(this,'residuos','alta','y')">🔴 Alta</div>
+      </div>
+    </div>
+
+    <div class="reveal-card" id="panel-residuos-alto" style="margin-top:0;">
+      <div class="card">
+        <div class="card-label">Tipo de resíduos esperados</div>
+        <div class="chip-group">
+          <span class="chip" onclick="toggleChip(this,'tipoResiduo')">Resíduos comuns (embalagens)</span>
+          <span class="chip" onclick="toggleChip(this,'tipoResiduo')">Resíduos de vegetação</span>
+          <span class="chip" onclick="toggleChip(this,'tipoResiduo')">Óleos / graxas</span>
+          <span class="chip" onclick="toggleChip(this,'tipoResiduo')">Baterias / eletrônicos</span>
+          <span class="chip" onclick="toggleChip(this,'tipoResiduo')">Concreto / entulho</span>
+        </div>
+        <div class="alert alert-info" style="margin-top:8px;font-size:12px;">
+          Obras com geração de resíduos perigosos podem exigir <strong>Plano de Gerenciamento de Resíduos Sólidos (PGRS)</strong> e manifesto de transporte.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Pendências a resolver antes do início das obras</div>
+      <textarea id="pendencias" rows="3" placeholder="Liste documentos faltantes, autorizações, ajustes de traçado, contatos necessários..."></textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Observações gerais / anotações de campo</div>
+      <textarea id="obsGerais" rows="4" placeholder="Qualquer informação relevante não coberta nas seções anteriores..."></textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Parecer do técnico responsável <span class="req">*</span></div>
+      <div class="radio-row">
+        <div class="radio-btn" onclick="radioSelect(this,'parecer','apto','y')">✅ APTO</div>
+        <div class="radio-btn" onclick="radioSelect(this,'parecer','condicionante','p')">⚠️ CONDICIONANTE</div>
+        <div class="radio-btn" onclick="radioSelect(this,'parecer','inapto','n')">🚫 INAPTO</div>
+      </div>
+      <div class="reveal-card" id="panel-parecer-cond" style="margin-top:8px;">
+        <div class="alert alert-warn"><strong>⚠️ APTO COM CONDICIONANTES:</strong> Descreva as condições a serem atendidas antes ou durante a obra.</div>
+        <textarea id="descCondicionantes" rows="3" placeholder="Descreva as condicionantes: ex. obter ASV, redesenhar traçado trecho X-Y, aguardar autorização FUNAI..." style="margin-top:8px"></textarea>
+      </div>
+      <div class="reveal-card" id="panel-parecer-inapto" style="margin-top:8px;">
+        <div class="alert alert-danger"><strong>🚫 INAPTO:</strong> Obra não pode prosseguir. Descreva os impedimentos identificados.</div>
+        <textarea id="descInapto" rows="3" placeholder="Descreva os impedimentos: área embargada, TI sem autorização, APP sem saída..." style="margin-top:8px"></textarea>
+      </div>
+    </div>
+
+  </div><!-- /sec6 -->
+
+</div><!-- /main -->
+
+<!-- ══════════════════════════════════════════════════════════════ RESULT PANEL -->
+<div id="result-panel">
+  <div class="result-header">
+    <div id="resultEmoji" style="font-size:40px;margin-bottom:8px;">📋</div>
+    <h2>Relatório de Vistoria</h2>
+    <p id="resultSubtitle">Vistoria Ambiental de Campo</p>
+  </div>
+
+  <div id="verdictBlock"></div>
+  <div id="processBlock"></div>
+
+  <div class="summary-card" id="sumLocal"></div>
+  <div class="summary-card" id="sumTecnico"></div>
+  <div class="summary-card" id="sumArea"></div>
+  <div class="summary-card" id="sumVeg"></div>
+  <div class="summary-card" id="sumFauna"></div>
+  <div class="summary-card" id="sumProjeto"></div>
+  <div class="summary-card" id="sumRiscos"></div>
+
+  <button class="btn-export" onclick="exportTxt()">📄 Exportar Relatório (.TXT)</button>
+  <button class="btn-new" onclick="resetForm()">🔄 Nova Vistoria</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ NAV BUTTONS -->
+<div class="btn-row" id="btnRow">
+  <button class="btn btn-outline" id="btnPrev" onclick="navSection(-1)" style="display:none">← Voltar</button>
+  <button class="btn btn-primary" id="btnNext" onclick="navSection(1)">Próximo →</button>
+  <button class="btn btn-submit"  id="btnSubmit" onclick="submitForm()" style="display:none">Finalizar ✓</button>
+</div>
+
+<script>
+// ══════════════════════════════════ STATE
+let currentSec = 0;
+const TOTAL_SECS = 7;
+const sectionDone = new Array(TOTAL_SECS).fill(false);
+const formData = {};
+
+// ══════════════════════════════════ AREA CLASSIFICATION
+const areaEspecialSelected = new Set();
+
+function toggleAreaEspecial(chip, key) {
+  // 'nenhuma' is exclusive
+  if (key === 'nenhuma') {
+    areaEspecialSelected.clear();
+    areaEspecialSelected.add('nenhuma');
+    document.querySelectorAll('#areaEspecialChips .chip').forEach(c => c.classList.remove('selected','selected-ok','selected-warn','selected-danger'));
+    chip.classList.add('selected-ok');
+  } else {
+    // remove nenhuma
+    areaEspecialSelected.delete('nenhuma');
+    document.querySelectorAll('#areaEspecialChips .chip').forEach(c => {
+      if (c.textContent.trim().startsWith('✅')) c.classList.remove('selected','selected-ok','selected-warn','selected-danger');
+    });
+    // toggle this one
+    if (areaEspecialSelected.has(key)) {
+      areaEspecialSelected.delete(key);
+      chip.classList.remove('selected','selected-ok','selected-warn','selected-danger');
+    } else {
+      areaEspecialSelected.add(key);
+      const cls = ['uc_federal','ti','app'].includes(key) ? 'selected-danger' : ['uc_estadual','quilombola','patrimonio','nao_confirmado'].includes(key) ? 'selected-warn' : 'selected';
+      chip.classList.add(cls);
+    }
+  }
+  showAreaPanels();
+  updateAll();
+}
+
+function showAreaPanels() {
+  const panelKeys = ['nenhuma','uc_estadual','uc_federal','ti','quilombola','patrimonio','app','nao_confirmado'];
+  panelKeys.forEach(k => {
+    const el = document.getElementById('panel-' + k);
+    if (el) { el.classList.toggle('show', areaEspecialSelected.has(k)); }
+  });
+  // also show/hide supressao sub-panels
+  updateSupressaoNSens();
+  updateBadge();
+}
+
+function updateSupressaoNSens() {
+  const noSup = formData['supressaoNSens'] === 'nao_supressao';
+  const yesSup = formData['supressaoNSens'] === 'sim_supressao';
+  toggleReveal('panel-sem-supressao', noSup);
+  toggleReveal('panel-com-supressao', yesSup);
+}
+
+function updateBadge() {
+  const badge = document.getElementById('areaBadge');
+  const label = document.getElementById('areaTypeLabel');
+  const sub   = document.getElementById('headerSub');
+
+  if (areaEspecialSelected.has('ti') || areaEspecialSelected.has('uc_federal') || areaEspecialSelected.has('app')) {
+    badge.className = 'red'; badge.style.display = 'flex';
+    label.textContent = '🔴 ÁREA COM RESTRIÇÃO ESPECIAL'; badge.style.display = 'flex';
+  } else if (areaEspecialSelected.has('uc_estadual') || areaEspecialSelected.has('quilombola') || areaEspecialSelected.has('patrimonio') || areaEspecialSelected.has('nao_confirmado')) {
+    badge.className = 'yellow'; badge.style.display = 'flex';
+    label.textContent = '🟡 ÁREA COM RESTRIÇÃO MODERADA';
+  } else if (areaEspecialSelected.has('nenhuma')) {
+    badge.className = 'green'; badge.style.display = 'flex';
+    label.textContent = '✅ ÁREA NÃO SENSÍVEL';
+  } else {
+    badge.style.display = 'none';
+  }
+
+  const loc = document.getElementById('nomeLocal')?.value?.trim();
+  const mun = document.getElementById('municipio')?.value?.trim();
+  if (loc || mun) sub.textContent = [loc, mun].filter(Boolean).join(' · ') + ' · Afaplan / Equatorial';
+}
+
+// ══════════════════════════════════ GENERIC HELPERS
+function toggleReveal(id, show) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('show', show);
+}
+
+function radioSelect(el, key, val, style) {
+  const parent = el.closest('.radio-row');
+  parent.querySelectorAll('.radio-btn').forEach(b => b.className = 'radio-btn');
+  const cls = style==='y'?'sel-y': style==='n'?'sel-n': style==='p'?'sel-p': 'sel-b';
+  el.classList.add(cls);
+  formData[key] = val;
+  updateRevealByKey(key, val);
+  updateAll();
+}
+
+const revealMap = {
+  supressao:         { key: 'supressao',        show: 'panel-supressao-veg',   when: v => v==='sim' || v==='duvida' },
+  espProt:           { key: 'espProt',           show: 'panel-esp-prot',        when: v => v==='sim' || v==='duvida' },
+  desvioTraçado:     { key: 'desvioTraçado',     show: 'panel-desvio-desc',     when: v => v==='sim' || v==='parcial' },
+  faunaAmeacada:     { key: 'faunaAmeacada',     show: 'panel-fauna-ameacada',  when: v => v==='sim' || v==='incerto' },
+  ninhosAtivos:      { key: 'ninhosAtivos',      show: 'panel-ninhos',          when: v => v==='sim' },
+  achAdArq:          { key: 'achAdArq',           show: 'panel-arqueologico',    when: v => v==='sim' },
+  authFUNAI:         { key: 'authFUNAI',          show: 'panel-funai-nao',       when: v => v==='nao' },
+  redePrev:          { key: 'redePrev',           show: 'panel-rede-prev',       when: v => v!=='nao' },
+  travessia:         { key: 'travessia',          show: 'panel-travessia',       when: v => v==='sim' },
+  iphan:             { key: 'iphan',              show: 'panel-iphan',           when: v => v==='sim' || v==='duvida' },
+  parecer:           { key: 'parecer',            show: 'panel-parecer-cond',    when: v => v==='condicionante' },
+  parecer2:          { key: 'parecer',            show: 'panel-parecer-inapto',  when: v => v==='inapto' },
+  residuos:          { key: 'residuos',           show: 'panel-residuos-alto',   when: v => v==='alta' || v==='media' },
+  supressaoNSens:    { key: 'supressaoNSens',     show: 'MULTI',                 when: () => true },
+  tipoObra:          { key: 'tipoObra',           show: 'rc-tipoOutro',          when: v => v==='outro' },
+};
+
+function updateRevealByKey(key, val) {
+  // Special multi-reveal for supressaoNSens
+  if (key === 'supressaoNSens') { updateSupressaoNSens(); return; }
+  // Handle show/hide for each reveal entry
+  Object.values(revealMap).forEach(r => {
+    if (r.key === key && r.show !== 'MULTI') {
+      toggleReveal(r.show, r.when(val));
+    }
+  });
+}
+
+function toggleChip(el, group) {
+  el.classList.toggle('selected');
+  updateAll();
+}
+
+function getGPS(latId, lonId) {
+  if (!navigator.geolocation) { alert('GPS não disponível neste dispositivo.'); return; }
+  navigator.geolocation.getCurrentPosition(pos => {
+    document.getElementById(latId).value = pos.coords.latitude.toFixed(6);
+    document.getElementById(lonId).value = pos.coords.longitude.toFixed(6);
+    const disp = document.getElementById(latId === 'latInicio' ? 'gpsDisplay0' : 'gpsDisplay1');
+    if (disp) {
+      disp.style.display = 'block';
+      disp.textContent = `📡 ${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}  ±${Math.round(pos.coords.accuracy)}m  ${new Date().toLocaleTimeString('pt-BR')}`;
+    }
+    updateAll();
+  }, () => alert('Não foi possível capturar o GPS. Verifique as permissões de localização.'));
+}
+
+// ══════════════════════════════════ PROGRESS
+function getRequiredFields() {
+  return {
+    0: () => v('nomeLocal') && v('municipio') && v('tipoObra'),
+    1: () => v('tecnico') && v('dataVisita'),
+    2: () => areaEspecialSelected.size > 0,
+    3: () => !!formData['supressao'],
+    4: () => true,
+    5: () => true,
+    6: () => !!formData['parecer'],
+  };
+}
+function v(id) { const el = document.getElementById(id); return el && el.value.trim() !== ''; }
+
+function updateAll() {
+  updateBadge();
+  updateProgress();
+  updateNavButtons();
+}
+
+function updateProgress() {
+  const checks = getRequiredFields();
+  let done = 0;
+  for (let i = 0; i < TOTAL_SECS; i++) { if (checks[i] && checks[i]()) { done++; sectionDone[i] = true; } else sectionDone[i] = false; }
+  document.getElementById('progressFill').style.width = (done / TOTAL_SECS * 100) + '%';
+  document.getElementById('progressLabel').textContent = done + ' / ' + TOTAL_SECS;
+  // update tab indicators
+  document.querySelectorAll('.nav-tab').forEach((tab, i) => {
+    tab.classList.toggle('done', sectionDone[i]);
+  });
+}
+
+function updateNavButtons() {
+  const prev = document.getElementById('btnPrev');
+  const next = document.getElementById('btnNext');
+  const sub  = document.getElementById('btnSubmit');
+  prev.style.display = currentSec > 0 ? '' : 'none';
+  const isLast = currentSec === TOTAL_SECS - 1;
+  next.style.display  = isLast ? 'none' : '';
+  sub.style.display   = isLast ? '' : 'none';
+}
+
+// ══════════════════════════════════ NAVIGATION
+function navSection(dir) {
+  const newSec = currentSec + dir;
+  if (newSec < 0 || newSec >= TOTAL_SECS) return;
+  document.getElementById('sec' + currentSec).classList.remove('active');
+  document.querySelectorAll('.nav-tab')[currentSec].classList.remove('active');
+  currentSec = newSec;
+  document.getElementById('sec' + currentSec).classList.add('active');
+  document.querySelectorAll('.nav-tab')[currentSec].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateNavButtons();
+}
+
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const sec = parseInt(tab.dataset.sec);
+    document.getElementById('sec' + currentSec).classList.remove('active');
+    document.querySelectorAll('.nav-tab')[currentSec].classList.remove('active');
+    currentSec = sec;
+    document.getElementById('sec' + currentSec).classList.add('active');
+    document.querySelectorAll('.nav-tab')[currentSec].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateNavButtons();
+  });
+});
+
+// ══════════════════════════════════ SUBMIT / RESULT
+function submitForm() {
+  // ─ Determine process type
+  let processType, processColor, processLabel, processDesc;
+  const hasRed    = areaEspecialSelected.has('ti') || areaEspecialSelected.has('uc_federal') || areaEspecialSelected.has('app');
+  const hasYellow = areaEspecialSelected.has('uc_estadual') || areaEspecialSelected.has('quilombola') || areaEspecialSelected.has('patrimonio');
+  const temSupressao = formData['supressao'] === 'sim';
+  const naoTemSupressao = formData['supressaoNSens'] === 'nao_supressao' || formData['supressao'] === 'nao';
+  const parecer = formData['parecer'];
+
+  if (hasRed) {
+    processType = 'danger'; processLabel = '🔴 PROCESSO AMBIENTAL — AUTORIZAÇÃO ESPECIAL';
+    processDesc = `A obra interfere em área com restrição especial (${[...areaEspecialSelected].filter(k=>['ti','uc_federal','app'].includes(k)).join(', ').toUpperCase().replace('_',' ')}). Requer autorização prévia do órgão federal (IBAMA/ICMBio/FUNAI) antes de qualquer serviço.`;
+  } else if (hasYellow || temSupressao) {
+    processType = 'warn'; processLabel = '🟡 PROCESSO AMBIENTAL — LICENCIAMENTO ESTADUAL';
+    processDesc = `Obra requer processo no SEMAS-PA. ${temSupressao ? 'Exige ASV (Autorização de Supressão Vegetal). ' : ''}${hasYellow ? 'Área com restrição moderada identificada.' : ''}`;
+  } else if (naoTemSupressao && areaEspecialSelected.has('nenhuma')) {
+    processType = 'ok'; processLabel = '✅ DISPENSA AMBIENTAL';
+    processDesc = 'Obra em área não sensível sem supressão vegetal. Encaminhar Relatório Comprobatório ao SEMAS/SEMMA com dados desta vistoria. Prazo: verificar com o órgão local.';
+  } else {
+    processType = 'info'; processLabel = '❓ CLASSIFICAÇÃO PENDENTE';
+    processDesc = 'Complete todos os campos obrigatórios para determinar o processo ambiental necessário.';
+  }
+
+  // ─ Verdict
+  let vLabel, vClass, vDesc;
+  if (!parecer) { vLabel = '⚠️ PARECER NÃO EMITIDO'; vClass = 'warn'; vDesc = 'O técnico não emitiu parecer final.'; }
+  else if (parecer === 'apto')          { vLabel = '✅ APTO'; vClass = 'ok'; vDesc = 'Área apta para início das atividades conforme os termos desta vistoria.'; }
+  else if (parecer === 'condicionante') { vLabel = '⚠️ APTO COM CONDICIONANTES'; vClass = 'warn'; vDesc = gv('descCondicionantes') || 'Ver condicionantes no relatório.'; }
+  else                                  { vLabel = '🚫 INAPTO'; vClass = 'danger'; vDesc = gv('descInapto') || 'Ver impedimentos no relatório.'; }
+
+  // ─ Build result UI
+  const loc  = gv('nomeLocal') || '—';
+  const mun  = gv('municipio')  || '—';
+  const uf   = gv('estado')     || '';
+  document.getElementById('resultSubtitle').textContent = `${loc} · ${mun}/${uf}`;
+
+  document.getElementById('verdictBlock').innerHTML = `
+    <div class="verdict-card ${vClass}">
+      <div class="verdict-title">${vLabel}</div>
+      <div class="verdict-body">${vDesc}</div>
+    </div>`;
+
+  document.getElementById('processBlock').innerHTML = `
+    <div class="verdict-card ${processType}">
+      <div class="verdict-title">${processLabel}</div>
+      <div class="verdict-body">${processDesc}</div>
+    </div>`;
+
+  // ─ Summary cards
+  makeSummary('sumLocal', '📍 Local', [
+    ['Local / Código', loc],
+    ['Município/UF', `${mun}/${uf}`],
+    ['Tipo de obra', gv('tipoObra') || '—'],
+    ['Extensão', gv('extKm') ? `${gv('extKm')} ${gv('extUnidade')||'km'}` : '—'],
+    ['Coord. inicial', gv('latInicio') ? `${gv('latInicio')}, ${gv('lonInicio')}` : '—'],
+  ]);
+  makeSummary('sumTecnico', '👤 Técnico', [
+    ['Responsável', gv('tecnico') || '—'],
+    ['Registro', gv('registro') || '—'],
+    ['Empresa', gv('empresa') || '—'],
+    ['Data', gv('dataVisita') ? new Date(gv('dataVisita')+'T12:00').toLocaleDateString('pt-BR') : '—'],
+    ['Hora início', gv('horaInicio') || '—'],
+    ['Fotos tiradas', gv('nFotos') || '—'],
+  ]);
+  makeSummary('sumArea', '🗺️ Classificação da Área', [
+    ['Restrições identificadas', [...areaEspecialSelected].join(', ') || '—'],
+    ['Zona', gv2('zona') || '—'],
+    ['UC Estadual', gv('nomeUCEstadual') || '—'],
+    ['UC Federal', gv('nomeUCFederal') || '—'],
+    ['Terra Indígena', gv('nomeTI') || '—'],
+    ['Quilombola', gv('nomeQuilombola') || '—'],
+    ['Auth. FUNAI', formData['authFUNAI'] || '—'],
+  ]);
+  makeSummary('sumVeg', '🌱 Vegetação', [
+    ['Supressão vegetal', formData['supressao'] || formData['supressaoNSens'] || '—'],
+    ['Área supressão (ha)', gv('supressaoHa') || '—'],
+    ['Metragem (m)', gv('supressaoM') || '—'],
+    ['Espécie protegida', formData['espProt'] || '—'],
+    ['Fragmento florestal', formData['fragmento'] || '—'],
+    ['Desvio possível', formData['desvioTraçado'] || '—'],
+    ['Obs.', gv('obsVeg') || '—'],
+  ]);
+  makeSummary('sumFauna', '🦜 Fauna', [
+    ['Espécies ameaçadas', formData['faunaAmeacada'] || '—'],
+    ['Ninhos ativos', formData['ninhosAtivos'] || '—'],
+    ['Sítio arqueológico', formData['achAdArq'] || '—'],
+    ['Descrição', gv('obsFauna') || '—'],
+  ]);
+  makeSummary('sumProjeto', '⚡ Projeto', [
+    ['Rede existente', formData['redePrev'] || '—'],
+    ['Travessia', formData['travessia'] || '—'],
+    ['Interferência IPHAN', formData['iphan'] || '—'],
+    ['Coord. final', gv('latFim') ? `${gv('latFim')}, ${gv('lonFim')}` : '—'],
+    ['Obs.', gv('obsTracado') || '—'],
+  ]);
+  makeSummary('sumRiscos', '⚠️ Riscos e Pendências', [
+    ['Resíduos', formData['residuos'] || '—'],
+    ['Pendências', gv('pendencias') || '—'],
+    ['Obs. gerais', gv('obsGerais') || '—'],
+    ['Parecer técnico', formData['parecer'] || '—'],
+  ]);
+
+  // show result panel
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('btnRow').style.display = 'none';
+  document.getElementById('result-panel').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function gv(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function gv2(key) { return formData[key] || ''; }
+
+function makeSummary(elId, title, rows) {
+  const el = document.getElementById(elId);
+  const filtered = rows.filter(r => r[1] && r[1] !== '—');
+  if (!filtered.length) { el.style.display = 'none'; return; }
+  el.style.display = '';
+  el.innerHTML = `<div class="summary-title">${title}</div>` +
+    filtered.map(r => `<div class="summary-row"><span class="summary-key">${r[0]}</span><span class="summary-value">${r[1]}</span></div>`).join('');
+}
+
+// ══════════════════════════════════ EXPORT
+function exportTxt() {
+  const now = new Date();
+  const loc = gv('nomeLocal') || 'SEM_LOCAL';
+  const mun = gv('municipio') || '';
+  const uf  = gv('estado') || '';
+  const tec = gv('tecnico') || '';
+  const dat = gv('dataVisita') ? new Date(gv('dataVisita')+'T12:00').toLocaleDateString('pt-BR') : '';
+
+  const hasRed    = areaEspecialSelected.has('ti') || areaEspecialSelected.has('uc_federal') || areaEspecialSelected.has('app');
+  const hasYellow = areaEspecialSelected.has('uc_estadual') || areaEspecialSelected.has('quilombola') || areaEspecialSelected.has('patrimonio');
+  const temSup    = formData['supressao'] === 'sim';
+  const naoBruta  = formData['supressaoNSens'] === 'nao_supressao';
+  let processLine;
+  if (hasRed)         processLine = 'PROCESSO AMBIENTAL — AUTORIZAÇÃO ESPECIAL (IBAMA/ICMBio/FUNAI)';
+  else if (hasYellow || temSup) processLine = 'PROCESSO AMBIENTAL — LICENCIAMENTO ESTADUAL (SEMAS-PA)';
+  else if (naoBruta)  processLine = 'DISPENSA AMBIENTAL — Relatório Comprobatório ao SEMAS/SEMMA';
+  else                processLine = 'A CLASSIFICAR — Ver observações';
+
+  const lines = [
+    '='.repeat(60),
+    'RELATÓRIO DE VISTORIA AMBIENTAL DE CAMPO',
+    'Afaplan Engenharia e Consultoria / Equatorial Energia',
+    '='.repeat(60),
+    '',
+    `Data/hora do relatório: ${now.toLocaleString('pt-BR')}`,
+    '',
+    '--- LOCAL ---',
+    `Local/Código:    ${loc}`,
+    `Município/UF:    ${mun}/${uf}`,
+    `Tipo de obra:    ${gv('tipoObra') || '—'}`,
+    `Extensão:        ${gv('extKm') ? gv('extKm')+' '+(gv('extUnidade')||'km') : '—'}`,
+    `Coord. inicial:  ${gv('latInicio') ? gv('latInicio')+', '+gv('lonInicio') : '—'}`,
+    `Coord. final:    ${gv('latFim')    ? gv('latFim')+', '+gv('lonFim') : '—'}`,
+    '',
+    '--- TÉCNICO ---',
+    `Responsável:     ${tec}`,
+    `Registro:        ${gv('registro') || '—'}`,
+    `Empresa:         ${gv('empresa') || '—'} / ${gv('contratante') || '—'}`,
+    `Data da vistoria:${dat}`,
+    `Hora início:     ${gv('horaInicio') || '—'}`,
+    `Clima:           ${getChips('clima')}`,
+    `Equipe:          ${gv('equipeOutros') || '—'}`,
+    `Fotos tiradas:   ${gv('nFotos') || '—'}`,
+    '',
+    '--- CLASSIFICAÇÃO DA ÁREA ---',
+    `Restrições:      ${[...areaEspecialSelected].join(', ') || '—'}`,
+    `Zona:            ${formData['zona'] || '—'}`,
+    `UC Estadual:     ${gv('nomeUCEstadual') || '—'}`,
+    `UC Federal:      ${gv('nomeUCFederal') || '—'}`,
+    `Terra Indígena:  ${gv('nomeTI') || '—'}`,
+    `Auth. FUNAI:     ${formData['authFUNAI'] || '—'}`,
+    `Quilombola:      ${gv('nomeQuilombola') || '—'}`,
+    `Anuência lider.: ${formData['anuenciaQbla'] || '—'}`,
+    `IPHAN/Patrim.:   ${getChips('tipPatrimonio')}`,
+    `Tipo APP:        ${getChips('tipoAPP')}`,
+    `Extensão APP:    ${gv('extAPP') ? gv('extAPP')+' m ('+gv('percAPP')+'%)' : '—'}`,
+    `Desvio APP:      ${formData['desvioAPP'] || '—'}`,
+    `Dúvidas área:    ${gv('duvidasArea') || '—'}`,
+    '',
+    '--- VEGETAÇÃO ---',
+    `Tipologia:       ${getChips('vegTipo')}`,
+    `Supressão prevista:${formData['supressao'] || formData['supressaoNSens'] || '—'}`,
+    `Área supressão:  ${gv('supressaoHa') ? gv('supressaoHa')+' ha / '+gv('supressaoM')+' m' : '—'}`,
+    `Esp. protegida:  ${formData['espProt'] || '—'}  ${gv('descEspProt') || ''}`,
+    `Fragmento flor.: ${formData['fragmento'] || '—'}`,
+    `Desvio possível: ${formData['desvioTraçado'] || '—'}  ${gv('descDesvio') || ''}`,
+    `Obs. vegetação:  ${gv('obsVeg') || '—'}`,
+    '',
+    '--- FAUNA ---',
+    `Grupos:          ${getChips('faunaGrupo')}`,
+    `Esp. ameaçadas:  ${formData['faunaAmeacada'] || '—'}  ${gv('descFaunaAmeacada') || ''}`,
+    `Ninhos ativos:   ${formData['ninhosAtivos'] || '—'}  ${gv('descNinhos') || ''}`,
+    `Sítio arq.:      ${formData['achAdArq'] || '—'}  ${gv('descArqueologico') || ''}`,
+    `Obs. fauna:      ${gv('obsFauna') || '—'}`,
+    '',
+    '--- PROJETO / TRAÇADO ---',
+    `Acesso:          ${getChips('acesso')}`,
+    `Terreno:         ${getChips('solo')}`,
+    `Rede existente:  ${formData['redePrev'] || '—'}  ${gv('redesExistente') || ''}`,
+    `Travessia:       ${formData['travessia'] || '—'}  ${getChips('tipTravessia')}`,
+    `IPHAN:           ${formData['iphan'] || '—'}`,
+    `Obs. traçado:    ${gv('obsTracado') || '—'}`,
+    '',
+    '--- RISCOS E PENDÊNCIAS ---',
+    `Riscos:          ${getChips('riscos')}`,
+    `Resíduos:        ${formData['residuos'] || '—'}  ${getChips('tipoResiduo')}`,
+    `Pendências:      ${gv('pendencias') || '—'}`,
+    `Obs. gerais:     ${gv('obsGerais') || '—'}`,
+    '',
+    '='.repeat(60),
+    `PROCESSO AMBIENTAL: ${processLine}`,
+    `PARECER TÉCNICO:    ${formData['parecer']?.toUpperCase() || 'NÃO EMITIDO'}`,
+    (formData['parecer'] === 'condicionante') ? `CONDICIONANTES:     ${gv('descCondicionantes') || '—'}` : '',
+    (formData['parecer'] === 'inapto') ? `IMPEDIMENTOS:       ${gv('descInapto') || '—'}` : '',
+    '='.repeat(60),
+    '',
+    `Técnico: ${tec}`,
+    `Data/hora: ${now.toLocaleString('pt-BR')}`,
+    '',
+    'Afaplan Engenharia e Consultoria / Equatorial Energia',
+    'Gerado por: Formulário de Vistoria Ambiental v2.0',
+  ].filter(l => l !== null).join('\n');
+
+  const blob = new Blob([lines], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Vistoria_${loc.replace(/\s+/g,'_')}_${gv('dataVisita')||'sem_data'}.txt`;
+  a.click();
+}
+
+function getChips(group) {
+  return [...document.querySelectorAll(`.chip.selected, .chip.selected-ok, .chip.selected-warn, .chip.selected-danger`)]
+    .filter(c => c.getAttribute('onclick')?.includes(`'${group}'`))
+    .map(c => c.textContent.trim())
+    .join(', ') || '—';
+}
+
+function resetForm() {
+  location.reload();
+}
+
+// ══════════════════════════════════ INIT
+document.addEventListener('DOMContentLoaded', () => {
+  // Set today's date
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('dataVisita').value = today;
+  updateAll();
+  updateNavButtons();
+});
+</script>
+
+<!-- ═══════════════════════════════════════════ INSTALL BANNER ═══ -->
+<div id="installBanner" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,#1a3a5c,#2a7faf);color:#fff;padding:10px 14px;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(0,0,0,0.3);">
+  <span style="font-size:20px;">📱</span>
+  <div style="flex:1;font-family:Nunito,sans-serif;">
+    <div style="font-size:13px;font-weight:800;">Instalar como app</div>
+    <div style="font-size:11px;opacity:0.8;">Funciona offline · Acesso pela tela inicial</div>
+  </div>
+  <button onclick="triggerInstall()" style="background:#4bafd9;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-family:Syne,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">Instalar</button>
+  <button onclick="document.getElementById('installBanner').style.display='none'" style="background:transparent;color:rgba(255,255,255,0.7);border:none;font-size:18px;cursor:pointer;padding:0 4px;">✕</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ OFFLINE INDICATOR ═══ -->
+<div id="offlineIndicator" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9998;background:#e67e22;color:#fff;padding:6px;text-align:center;font-family:Nunito,sans-serif;font-size:12px;font-weight:700;">
+  📵 SEM CONEXÃO — Dados salvos localmente. O formulário continua funcionando.
+</div>
+
+<!-- ═══════════════════════════════════════════ SERVICE WORKER + INSTALL ═══ -->
+<script>
+// ── INSTALL BANNER ──────────────────────────────────────────────────────────
+var _deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  _deferredPrompt = e;
+  var banner = document.getElementById('installBanner');
+  if(banner) banner.style.display = 'flex';
+});
+window.addEventListener('appinstalled', function(){
+  var banner = document.getElementById('installBanner');
+  if(banner) banner.style.display = 'none';
+  _deferredPrompt = null;
+});
+function triggerInstall(){
+  if(!_deferredPrompt){ alert('Para instalar:\n\nAndroid Chrome: menu (⋮) → "Adicionar à tela inicial"\niOS Safari: botão compartilhar → "Adicionar à Tela de Início"'); return; }
+  _deferredPrompt.prompt();
+  _deferredPrompt.userChoice.then(function(){ _deferredPrompt=null; document.getElementById('installBanner').style.display='none'; });
+}
+
+// ── SERVICE WORKER REGISTRATION ─────────────────────────────────────────────
+if('serviceWorker' in navigator){
+  // Inline SW as blob URL so it works from file:// and any origin
+  var swCode = `
+const CACHE = 'vistoria-ambiental-v1';
+const FONTS = 'https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Nunito:wght@400;500;600;700&display=swap';
+
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE).then(c => {
+      // Cache the page itself (main shell)
+      return c.addAll(['./', FONTS]).catch(() => {});
+    })
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', e => {
+  // Network-first for same-origin, cache-first for fonts/static
+  const url = new URL(e.request.url);
+  if(url.hostname.includes('fonts') || url.pathname.endsWith('.css') || url.pathname.endsWith('.js')){
+    e.respondWith(
+      caches.match(e.request).then(r => r || fetch(e.request).then(res => {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+        return res;
+      }).catch(() => new Response('', {status:503})))
+    );
+  } else {
+    e.respondWith(
+      fetch(e.request).then(res => {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+        return res;
+      }).catch(() => caches.match(e.request).then(r => r || new Response('Sem conexão – usando cache', {status:503, headers:{'Content-Type':'text/plain;charset=utf-8'}})))
+    );
+  }
+});
+`;
+  var swBlob = new Blob([swCode], {type:'application/javascript'});
+  var swUrl  = URL.createObjectURL(swBlob);
+  navigator.serviceWorker.register(swUrl, {scope:'./'})
+    .then(function(reg){
+      console.log('[PWA] Service Worker registrado:', reg.scope);
+      // Show offline indicator update
+      reg.addEventListener('updatefound', function(){
+        var nw = reg.installing;
+        nw.addEventListener('statechange', function(){
+          if(nw.state==='installed' && navigator.serviceWorker.controller){
+            showToast('🔄 Atualização disponível. Recarregue o app.');
+          }
+        });
+      });
+    })
+    .catch(function(err){ console.warn('[PWA] SW não registrado:', err); });
+
+  // Online / offline indicator
+  function updateOnlineStatus(){
+    var ind = document.getElementById('offlineIndicator');
+    if(ind){ ind.style.display = navigator.onLine ? 'none' : 'flex'; }
+  }
+  window.addEventListener('online',  updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+  window.addEventListener('DOMContentLoaded', updateOnlineStatus);
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg){
+  var t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a3a5c;color:#fff;padding:10px 18px;border-radius:99px;font-size:13px;font-family:Nunito,sans-serif;font-weight:700;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.25);white-space:nowrap;';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.opacity='0'; t.style.transition='opacity 0.5s'; setTimeout(function(){ t.remove(); },600); },3500);
+}
+<\/script>
+
+<!-- ═══════════════════════════════ INSTALL GUIDE MODAL ═══ -->
+<div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;padding:20px;overflow-y:auto;">
+  <div style="background:#fff;border-radius:16px;max-width:480px;margin:0 auto;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+    <div style="background:linear-gradient(135deg,#1a3a5c,#2a7faf);padding:20px;color:#fff;position:relative;">
+      <button onclick="document.getElementById('installModal').style.display='none'" style="position:absolute;right:14px;top:14px;background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:50%;width:28px;height:28px;font-size:16px;cursor:pointer;line-height:1;">✕</button>
+      <div style="font-size:32px;margin-bottom:8px;">📲</div>
+      <div style="font-family:Syne,sans-serif;font-size:18px;font-weight:800;">Instalar como Aplicativo</div>
+      <div style="font-size:12px;opacity:0.8;margin-top:4px;">Funciona offline · Acesso pela tela inicial · Sem Play Store</div>
+    </div>
+    <div style="padding:20px;">
+
+      <!-- Android Chrome -->
+      <div style="background:#f0f5fa;border-radius:12px;padding:14px;margin-bottom:12px;border-left:4px solid #2a7faf;">
+        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:14px;color:#1a3a5c;margin-bottom:8px;">🤖 Android (Chrome)</div>
+        <div style="font-size:13px;color:#2c4a5c;line-height:1.7;">
+          1. Abra este arquivo no <strong>Google Chrome</strong><br>
+          2. Toque no menu <strong>⋮</strong> (canto superior direito)<br>
+          3. Selecione <strong>"Adicionar à tela inicial"</strong><br>
+          4. Confirme tocando em <strong>"Adicionar"</strong><br>
+          <span style="font-size:11px;color:#5a8a9a;display:block;margin-top:6px;">💡 Ou aguarde o banner automático aparecer no topo da tela</span>
+        </div>
+      </div>
+
+      <!-- iOS Safari -->
+      <div style="background:#f5f0fa;border-radius:12px;padding:14px;margin-bottom:12px;border-left:4px solid #6c3483;">
+        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:14px;color:#3a0a5c;margin-bottom:8px;">🍎 iPhone / iPad (Safari)</div>
+        <div style="font-size:13px;color:#3a2c5c;line-height:1.7;">
+          1. Abra este arquivo no <strong>Safari</strong><br>
+          2. Toque no botão <strong>compartilhar</strong> (□↑ na barra inferior)<br>
+          3. Role e selecione <strong>"Adicionar à Tela de Início"</strong><br>
+          4. Toque em <strong>"Adicionar"</strong> no canto superior direito<br>
+          <span style="font-size:11px;color:#7a5a9a;display:block;margin-top:6px;">⚠️ Deve ser aberto no Safari (não Chrome) no iOS</span>
+        </div>
+      </div>
+
+      <!-- Servidor local -->
+      <div style="background:#f0faf5;border-radius:12px;padding:14px;margin-bottom:12px;border-left:4px solid #1e8449;">
+        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:14px;color:#0a3320;margin-bottom:8px;">🌐 Distribuição via Rede / Servidor</div>
+        <div style="font-size:13px;color:#1a3a2c;line-height:1.7;">
+          Para distribuir para toda a equipe via Wi-Fi local:<br>
+          1. Coloque o arquivo <strong>formulario_vistoria_ambiental_pwa.html</strong> em um servidor web<br>
+          2. Compartilhe o link IP local (ex: <code style="background:#e0f0e8;padding:1px 5px;border-radius:3px;">192.168.1.100/vistoria</code>)<br>
+          3. Cada técnico acessa pelo celular e instala normalmente<br>
+          <span style="font-size:11px;color:#2a6a40;display:block;margin-top:6px;">💡 Opção gratuita: usar <strong>Live Server</strong> (VS Code) ou <strong>Python:</strong> <code>python -m http.server 8080</code></span>
+        </div>
+      </div>
+
+      <!-- Vantagens offline -->
+      <div style="background:#fef9e7;border-radius:12px;padding:14px;border-left:4px solid #f5a623;">
+        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:14px;color:#5a3000;margin-bottom:8px;">✨ Vantagens do modo instalado</div>
+        <div style="font-size:13px;color:#4a3a00;line-height:1.7;">
+          ✅ Funciona <strong>100% offline</strong> (sem internet na mata)<br>
+          ✅ Ocupa tela cheia (sem barra de URL)<br>
+          ✅ Ícone na tela inicial como qualquer app<br>
+          ✅ Exportação de relatório .TXT sem internet<br>
+          ✅ Dados do formulário permanecem mesmo sem sinal
+        </div>
+      </div>
+
+      <button onclick="triggerInstall()" style="width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,#1a3a5c,#2a7faf);color:#fff;border:none;border-radius:10px;font-family:Syne,sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(26,58,92,0.3);">
+        📲 Instalar Agora (Android Chrome)
+      </button>
+      <button onclick="document.getElementById('installModal').style.display='none'" style="width:100%;margin-top:8px;padding:12px;background:#fff;color:#5a8a9a;border:2px solid #c8d8e8;border-radius:10px;font-family:Syne,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
+        Fechar
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showInstallGuide(){
+  document.getElementById('installModal').style.display = 'block';
+  document.getElementById('installModal').scrollTop = 0;
+}
+</script>
+</body>
+</html>
